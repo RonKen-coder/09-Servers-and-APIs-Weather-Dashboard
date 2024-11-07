@@ -1,4 +1,4 @@
-import fs from 'node:fs/promises';
+// import fs from 'node:fs/promises';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -79,7 +79,7 @@ class WeatherService {
   async fetchLocationData(query: string) {
     try {
       const response = await fetch(
-        `${this.baseURL}/${state}&api_key=${this.apiKey}`
+        `${this.baseURL}/geo/1.0/direct?q=${query}&limit=1&appid=${this.apiKey}`
       );
       const foundCoords = await response.json();
 
@@ -92,16 +92,13 @@ class WeatherService {
 
   // TODO: Create destructureLocationData method
 
-async destructureLocationData(locationData: Coordinates) {
-
-  // private destructureLocationData(locationData: Coordinates): Coordinates {}
-  private destructureLocationData(locationData: any): Coordinates {
-    if (!locationData || locationData.length === 0) {
-      throw new Error('Invalid location data');
-    }
-    const { lat, lon } = locationData[0];
-    return { latitude: lat, longitude: lon };
+private destructureLocationData(locationData: any): Coordinates {
+  if (!locationData || locationData.length === 0) {
+    throw new Error('Invalid location data');
   }
+  const { lat, lon } = locationData[0];
+  return { latitude: lat, longitude: lon };
+}
   // TODO: Create buildGeocodeQuery method
   // private buildGeocodeQuery(): string {}
   private buildGeocodeQuery(): string {
@@ -111,7 +108,7 @@ async destructureLocationData(locationData: Coordinates) {
   // TODO: Create buildWeatherQuery method
   // private buildWeatherQuery(coordinates: Coordinates): string {}
   private buildWeatherQuery(coordinates: Coordinates): string {
-    return `${coordinates.latitude},${coordinates.longitude}&appid=${this.apiKey}`;
+    return `${this.baseURL}/data/2.5/weather?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${this.apiKey}`;
   }
   // TODO: Create fetchAndDestructureLocationData method
   private async fetchAndDestructureLocationData(): Promise<Coordinates> {
@@ -132,15 +129,15 @@ async destructureLocationData(locationData: Coordinates) {
   // TODO: Build parseCurrentWeather method
   // private parseCurrentWeather(response: any) {}
   private parseCurrentWeather(response: any): Weather {
-    return {
-      cityName: response.name,
-      date: new Date(response.dt * 1000).toISOString(),
-      icon: response.weather[0].icon,
-      description: response.weather[0].description,
-      temperature: response.main.temp,
-      humidity: response.main.humidity,
-      windSpeed: response.wind.speed,
-    };
+    return new Weather(
+      response.name,
+      new Date(response.dt * 1000).toISOString(),
+      response.weather[0].icon,
+      response.weather[0].description,
+      response.main.temp,
+      response.main.humidity,
+      response.wind.speed
+    );
   }
 
   // TODO: Complete buildForecastArray method

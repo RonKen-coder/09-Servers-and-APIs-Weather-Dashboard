@@ -15,6 +15,10 @@ class City {
 
 // TODO: Complete the HistoryService class
 class HistoryService {
+  getHistory() {
+    throw new Error('Method not implemented.');
+  }
+  async addCity(city: string): Promise<void> {
 
   // TODO: Define a read method that reads from the searchHistory.json file
   // private async read() {}
@@ -90,3 +94,13 @@ async removeCities(id: string) {
   }
 
 export default new HistoryService();
+
+
+
+
+
+  async addCity(city: string): Promise<void> {
+
+
+
+}
