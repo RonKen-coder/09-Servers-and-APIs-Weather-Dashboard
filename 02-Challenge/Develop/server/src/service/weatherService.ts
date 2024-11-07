@@ -3,7 +3,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 
-// TODO: Define an interface for the Coordinates object (lat and lon properties)
+// Define an interface for the Coordinates object (lat and lon properties)
+interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
 interface latitudeImage {
   url: string;
   title: string;
@@ -83,7 +87,7 @@ class WeatherService {
       );
       const foundCoords = await response.json();
 
-      return this.destructureLocationData(foundCoords[0].lat, foundCoords[0].lon);
+      return this.destructureLocationData(foundCoords);
     } catch (err) {
       console.log('Error:', err);
       return err;
@@ -99,11 +103,6 @@ private destructureLocationData(locationData: any): Coordinates {
   const { lat, lon } = locationData[0];
   return { latitude: lat, longitude: lon };
 }
-  // TODO: Create buildGeocodeQuery method
-  // private buildGeocodeQuery(): string {}
-  private buildGeocodeQuery(): string {
-    return `${this.cityName}&appid=${this.apiKey}`;
-  }
 
   // TODO: Create buildWeatherQuery method
   // private buildWeatherQuery(coordinates: Coordinates): string {}
@@ -142,18 +141,6 @@ private destructureLocationData(locationData: any): Coordinates {
 
   // TODO: Complete buildForecastArray method
   // private buildForecastArray(currentWeather: Weather, weatherData: any[]) {}
-  private buildForecastArray(currentWeather: Weather, weatherData: any[]): Weather[] {
-    // Example method logic to build forecast array; could be extended with more data
-    return weatherData.map((data: any) => ({
-      ...currentWeather,
-      date: new Date(data.dt * 1000).toISOString(),
-      temperature: data.main.temp,
-      humidity: data.main.humidity,
-      windSpeed: data.wind.speed,
-      icon: data.weather[0].icon,
-      description: data.weather[0].description,
-    }));
-  }
 
   // TODO: Complete getWeatherForCity method
   // async getWeatherForCity(city: string) {}
@@ -164,10 +151,6 @@ private destructureLocationData(locationData: any): Coordinates {
     return this.parseCurrentWeather(weatherResponse);
   }
 }
-}
 
-export default new WeatherService();
-function __init__(self: Window & typeof globalThis, city_name: any, date: any, icon: any, description: any, temperature: any, humidity: any, wind_speed: any) {
-  throw new Error('Function not implemented.');
-}
+export default new WeatherService('DefaultCityName');
 
