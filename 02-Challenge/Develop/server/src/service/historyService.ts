@@ -15,12 +15,15 @@ class City {
 
 // TODO: Complete the HistoryService class
 class HistoryService {
-  getHistory() {
-    throw new Error('Method not implemented.');
-  }
+  // getHistory() {
+  //   throw new Error('Method not implemented.');
+  // }
   // TODO: Define a getCities method that reads the cities from the searchHistory.json file and returns them as an array of City objects
   private async read(): Promise<string> {
-    return await fs.readFile('db/db.json', 'utf-8');
+    return await fs.readFile('db/db.json', {
+      flag: 'a+',
+      encoding: 'utf8',
+    });
   }
   async getCities() {
     return await this.read().then((cities) => {
